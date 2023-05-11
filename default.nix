@@ -1,5 +1,6 @@
-{ lib, stdenv, fetchFromGitHub, jdk, gradle, perl, writeText, runtimeShell, makeWrapper, tree }:
+{ lib, stdenv, fetchFromGitHub, jdk, gradle_7, perl, writeText, runtimeShell, makeWrapper, tree }:
 let
+  gradle = gradle_7;
   pname = "structurizr-cli";
   version = "1.30.0";
 
@@ -18,7 +19,7 @@ let
 
     buildPhase = ''
       export GRADLE_USER_HOME=$(mktemp -d);
-      gradle --no-daemon build -x test
+      gradle --no-daemon getDeps
     '';
 
     # Mavenize dependency paths
@@ -79,7 +80,8 @@ in stdenv.mkDerivation rec {
   installPhase = ''
     mkdir -p $out/bin
     mkdir -p $out/share/java
-        
+
+    tree build
     install -Dm644 build/libs/${pname}-${version}.jar $out/share/java
     install -Dm644 build/resources/main/application.properties $out/share/java
     

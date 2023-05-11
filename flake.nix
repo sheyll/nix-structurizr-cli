@@ -16,6 +16,9 @@
       system: let
         pkgs = nixpkgs.legacyPackages.${system};
       in {
+        overlays = [(final: prev: {
+          structurizr-cli = self.packages.${system}.structurizr-cli;
+        })];
         packages = rec {
           structurizr-cli = pkgs.callPackage ./default.nix {};
           default = structurizr-cli;
